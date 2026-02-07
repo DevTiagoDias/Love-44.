@@ -1,15 +1,17 @@
 // components/Scene/Scene.jsx
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei' // Environment removido daqui pois está sendo usado no componente Environment.jsx
 import { Physics } from '@react-three/rapier'
 import { EffectComposer, Bloom, Vignette, Noise } from '@react-three/postprocessing'
 import { Suspense } from 'react'
+import * as THREE from 'three' // Import THREE
 import { useGameState } from '@/stores/useGameState'
 import { RevolverModel } from '../Revolver/RevolverModel'
 import { BulletLoadingUI } from '../Bullets/BulletLoadingUI'
 import { GlassSystem } from '../GlassPanel/GlassSystem'
 import { PhotoReveal } from '../Revelation/PhotoReveal'
 import { VolumetricFog } from './VolumetricFog'
+import { Environment } from './Environment' // Importar o componente Environment local
 
 export default function Scene() {
   const { phase, bulletTime } = useGameState()
@@ -18,11 +20,15 @@ export default function Scene() {
     <div className="w-full h-screen bg-black">
       <Canvas
         shadows
-        dpr={[1, 2]}
+        // DPR (Device Pixel Ratio): [min, max]
+        // Aumentado para [1, 3] para suportar telas 4K/Retina com nitidez máxima
+        dpr={[1, 3]} 
         gl={{ 
-          antialias: true,
+          antialias: true, // Garante bordas lisas
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.2
+          toneMappingExposure: 1.2,
+          // Preserva o buffer de desenho para screenshots se necessário, e ajuda na nitidez em alguns browsers
+          preserveDrawingBuffer: true 
         }}
       >
         {/* Camera Setup */}
@@ -32,34 +38,8 @@ export default function Scene() {
           fov={50}
         />
         
-        {/* Lighting - Neo-Noir Rim Setup */}
-        <ambientLight intensity={0.05} />
-        
-        {/* Key Rim Light - Silver */}
-        <spotLight
-          position={[-5, 3, -2]}
-          intensity={8}
-          angle={0.6}
-          penumbra={0.5}
-          color="#C0C0C0"
-          castShadow
-        />
-        
-        {/* Accent Rim Light - Crimson */}
-        <spotLight
-          position={[4, 2, -3]}
-          intensity={6}
-          angle={0.5}
-          penumbra={0.6}
-          color="#8B0000"
-        />
-        
-        {/* Fill Light - Very Subtle */}
-        <pointLight
-          position={[0, -2, 3]}
-          intensity={0.8}
-          color="#404040"
-        />
+        {/* Componente de Ambiente e Luzes */}
+        <Environment />
         
         {/* Volumetric Atmosphere */}
         <VolumetricFog />
@@ -81,15 +61,14 @@ export default function Scene() {
           </Suspense>
         </Physics>
         
-        {/* Environment Map for Reflections */}
-        <Environment preset="night" />
-        
-        {/* Post Processing */}
-        <EffectComposer>
+        {/* Post Processing - Cuidado: Bloom muito forte pode "borrar" a imagem */}
+        <EffectComposer disableNormalPass>
           <Bloom 
             intensity={0.4} 
             luminanceThreshold={0.9}
             luminanceSmoothing={0.9}
+            // MipmapBlur ajuda na performance mas pode suavizar demais. 
+            // Se ainda achar borrado, tente remover ou ajustar o kernelSize.
           />
           <Vignette 
             offset={0.3} 

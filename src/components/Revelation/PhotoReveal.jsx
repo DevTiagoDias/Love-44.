@@ -1,7 +1,6 @@
-// components/Revelation/PhotoReveal.jsx
 import { useTexture, Text3D, Center } from '@react-three/drei'
-import { useRef, useMemo } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useRef, useMemo, useEffect } from 'react' // Adicionado useEffect
+import { useFrame, useThree } from '@react-three/fiber' // Adicionado useThree
 import * as THREE from 'three'
 import { useGameState } from '@/stores/useGameState'
 
@@ -23,12 +22,26 @@ export function PhotoReveal() {
 }
 
 function PhotoFrame() {
-  const texture = useTexture('/images/romantic-photo.jpg', (tex) => {
-    // Optimize texture
-    tex.minFilter = THREE.LinearMipMapLinearFilter
-    tex.magFilter = THREE.LinearFilter
-    tex.generateMipmaps = true
-  })
+  const texture = useTexture('/images/romantic-photo.jpg')
+  const { gl } = useThree() // Acesso ao renderizador para garantir maxAnisotropy
+  
+  // Configuração avançada de textura para nitidez máxima (4K ready)
+  useEffect(() => {
+    if (texture) {
+      // Encoding correto para cores vibrantes
+      texture.colorSpace = THREE.SRGBColorSpace
+      
+      // Filtros de alta qualidade
+      texture.minFilter = THREE.LinearMipMapLinearFilter
+      texture.magFilter = THREE.LinearFilter // Linear é melhor que Nearest para fotos realistas
+      
+      // Anisotropia máxima suportada pela GPU do usuário (evita borrão em ângulos)
+      texture.anisotropy = gl.capabilities.getMaxAnisotropy()
+      
+      texture.generateMipmaps = true
+      texture.needsUpdate = true
+    }
+  }, [texture, gl])
   
   const glassIntact = useGameState((s) => s.glassIntact)
   
@@ -47,12 +60,15 @@ function PhotoFrame() {
   
   return (
     <mesh ref={meshRef}>
-      <planeGeometry args={[2.5, 3.5]} />
+      {/* Aumentado o número de segmentos da geometria para evitar distorção da textura */}
+      <planeGeometry args={[2.5, 3.5, 32, 32]} /> 
       <meshBasicMaterial 
         map={texture} 
         toneMapped={false}
         transparent
         opacity={0.3}
+        // Opcional: Se a imagem ainda parecer escura/lavada
+        // color={"white"} 
       />
     </mesh>
   )
