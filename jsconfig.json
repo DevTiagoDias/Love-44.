@@ -1,40 +1,40 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/stores/*": ["./src/stores/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/shaders/*": ["./src/shaders/*"]
-    },
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "preserve",
-    "strict": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+  "name": "ballistic-devotion",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.js",
-    "**/*.jsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "^14.1.0",
+    "three": "^0.160.0",
+    "@react-three/fiber": "^8.15.16",
+    "@react-three/drei": "^9.96.0",
+    "@react-three/rapier": "^1.2.1",
+    "@react-three/postprocessing": "^2.16.0",
+    "zustand": "^4.5.0",
+    "@react-spring/three": "^9.7.3",
+    "@use-gesture/react": "^10.3.0",
+    "howler": "^2.2.4",
+    "leva": "^0.9.35",
+    "postprocessing": "^6.34.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.48",
+    "@types/three": "^0.160.0",
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.1.0",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "raw-loader": "^4.0.2",
+    "glslify-loader": "^2.0.0"
+  }
 }
