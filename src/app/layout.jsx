@@ -1,14 +1,15 @@
+// Importação CRÍTICA: Se esta linha faltar, o site fica sem estilo
 import './globals.css'
 
 export const metadata = {
-  title: process.env.NEXT_PUBLIC_APP_NAME || 'Ballistic Devotion',
-  description: 'Uma experiência interativa Neo-Noir com física WebGL.',
+  title: 'Ballistic Devotion',
+  description: 'Neo-Noir Experience',
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="antialiased bg-[#0a0a0a] text-[#C0C0C0] overflow-hidden m-0 p-0">
+    <html lang="pt">
+      <body className="antialiased bg-black text-white">
         {children}
       </body>
     </html>

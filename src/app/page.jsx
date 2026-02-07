@@ -2,32 +2,37 @@
 
 import dynamic from 'next/dynamic'
 
-// Carrega o componente Scene dinamicamente.
-// ssr: false é CRÍTICO porque o Three.js precisa do objeto 'window' que não existe no servidor.
+// Evita erros de renderização estática
+export const dynamicMode = 'force-dynamic';
+
 const Scene = dynamic(() => import('@/components/Scene/Scene'), {
   ssr: false,
   loading: () => (
-    // Ecrã de carregamento simples enquanto o JS e os modelos 3D baixam
-    <div className="flex h-screen w-full items-center justify-center bg-[#0a0a0a] text-[#C0C0C0]">
-      <div className="font-serif text-xl tracking-[0.2em] animate-pulse">
-        A CARREGAR...
-      </div>
+    <div style={{ 
+      width: '100vw', 
+      height: '100vh', 
+      backgroundColor: '#000', 
+      color: '#fff', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center' 
+    }}>
+      <div className="animate-pulse">A CARREGAR EXPERIÊNCIA...</div>
     </div>
   )
 })
 
 export default function Home() {
+  // Usamos style={{...}} para garantir que funciona mesmo sem o Tailwind carregar
   return (
-    // Contentor principal que ocupa todo o ecrã
-    <main className="relative w-full h-screen bg-[#0a0a0a] overflow-hidden">
-      
-      {/* Renderiza a Cena 3D */}
+    <main style={{ 
+      position: 'relative', 
+      width: '100vw', 
+      height: '100vh', 
+      backgroundColor: '#000', 
+      overflow: 'hidden' 
+    }}>
       <Scene />
-      
-      {/* Nota: A interface de utilizador (UI) para carregar as balas 
-        já está incluída dentro do componente <Scene /> 
-      */}
-      
     </main>
   )
 }
